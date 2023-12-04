@@ -33,6 +33,14 @@ def parseLine(line, y):
         if char != '.':
             symbols.add((idx, y))
 
+    if len(currentDigits) > 0:
+        numbers.append(
+            {
+                'number': int(''.join(currentDigits)),
+                'start': (idx-len(currentDigits), y),
+            }
+        )
+
     return numbers, symbols
 
 
