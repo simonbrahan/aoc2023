@@ -20,11 +20,13 @@ def mapFromSpec(spec):
 
 
 def mapFromRanges(ranges):
-    out = {}
+    out = []
     for spec in ranges:
         destinationStart, sourceStart, rangeLength = map(int, spec.split())
-        for offset in range(rangeLength):
-            out[sourceStart + offset] = destinationStart + offset
+        # Begin tuple with source start for easy sorting
+        out.append((sourceStart, destinationStart, rangeLength))
+
+    out.sort()
 
     return out
 
@@ -32,14 +34,27 @@ def mapFromRanges(ranges):
 def locationFor(seed, maps):
     position = seed
 
-    for name, partialMap in maps:
-        if position in partialMap:
-            position = partialMap[position]
+    for name, partialMaps in maps:
+        position = mapPositionFor(position, partialMaps)
 
     return position
 
 
-seeds, maps = parseMaps('sample.txt')
+def mapPositionFor(position, partialMaps):
+    for sourceStart, destinationStart, rangeLength in partialMaps:
+        if position < sourceStart:
+            continue
+
+        if position >= sourceStart + rangeLength:
+            continue
+
+        position = position - sourceStart + destinationStart
+        break
+
+    return position
+
+
+seeds, maps = parseMaps('input.txt')
 
 nearest = None
 for seed in seeds:
