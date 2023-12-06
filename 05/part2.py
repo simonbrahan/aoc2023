@@ -14,9 +14,32 @@ def seedRangesFromLine(line):
     nums = list(map(int, line[6:].split()))
     ranges = [tuple(nums[i:i+2]) for i in range(0, len(nums), 2)]
 
-    ranges.sort()
+    return mergeRanges(ranges)
 
-    return ranges
+
+def mergeRanges(ranges):
+    out = []
+
+    currentStart = None
+    currentEnd = None
+    for start, length in sorted(ranges):
+        if currentStart == None:
+            currentStart = start
+            currentEnd = start + length - 1
+            continue
+
+        if start > currentEnd:
+            out.append((currentStart, currentEnd))
+            currentStart = start
+            currentEnd = start + length - 1
+            continue
+
+        currentEnd = start + length
+
+    if currentStart != None:
+        out.append((currentStart, currentEnd))
+
+    return out
 
 
 def mapFromSpec(spec):
@@ -66,8 +89,8 @@ def mapPositionFor(position, partialMaps):
 seedRanges, maps = parseMaps('input.txt')
 
 nearest = None
-for rangeStart, rangeLength in seedRanges:
-    for seed in range(rangeStart, rangeStart+rangeLength):
+for rangeStart, rangeEnd in seedRanges:
+    for seed in range(rangeStart, rangeEnd+1):
         location = locationFor(seed, maps)
         if nearest == None or location < nearest:
             nearest = location
