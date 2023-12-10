@@ -7,13 +7,13 @@ def parseInput(fileName):
     return out
 
 
-def nextValueOf(history):
+def previousValueOf(history):
     if numbersAllMatch(history):
         return history[0]
 
     valueDiffs = diffsBetween(history)
 
-    return history[0] - nextValueOf(valueDiffs)
+    return history[0] - previousValueOf(valueDiffs)
 
 
 def numbersAllMatch(numbers):
@@ -36,6 +36,6 @@ histories = parseInput('input.txt')
 
 sumOfNextValues = 0
 for history in histories:
-    sumOfNextValues += nextValueOf(history)
+    sumOfNextValues += previousValueOf(history)
 
 print(sumOfNextValues)
