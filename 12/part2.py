@@ -9,7 +9,14 @@ def parseLine(line):
     return (list('?'.join([springs] * 5)), list(map(int, damageSpec.split(',') * 5)))
 
 
+def countPossibleArrangements(springs, damageSpec):
+    return 0
+
+
 rows = parseInput('sample.txt')
 
+numPossibleArrangements = 0
 for springs, damageSpec in rows:
-    print(''.join(springs), damageSpec)
+    numPossibleArrangements += countPossibleArrangements(springs, damageSpec)
+
+print(numPossibleArrangements)
