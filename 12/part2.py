@@ -6,10 +6,12 @@ def parseInput(fileName):
 def parseLine(line):
     springs, damageSpec = line.strip().split()
 
-    return (list('?'.join([springs] * 5)), list(map(int, damageSpec.split(',') * 5)))
+    return ('?'.join([springs] * 5), tuple(map(int, damageSpec.split(',') * 5)))
 
 
 def countPossibleArrangements(springs, damageSpec):
+    print(springs, damageSpec)
+
     return 0
 
 
