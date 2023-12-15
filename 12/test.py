@@ -1,18 +1,5 @@
-import functools
 import re
 
-def parseInput(fileName):
-    with open(fileName) as file:
-        return [parseLine(line) for line in file]
-
-
-def parseLine(line):
-    springs, damageSpec = line.strip().split()
-
-    return ('?'.join([springs] * 5), tuple(map(int, damageSpec.split(',') * 5)))
-
-
-@functools.cache
 def countPossibleArrangements(springs, damageSpec):
     # No more damage groups...
     if len(damageSpec) == 0:
@@ -39,7 +26,6 @@ def countPossibleArrangements(springs, damageSpec):
     #
     # Looking at a broken spring
     #
-
     nextGroupSize = damageSpec[0]
 
     # Not enough remaining springs to satisfy group
@@ -58,10 +44,41 @@ def countPossibleArrangements(springs, damageSpec):
     return countPossibleArrangements(springs[nextGroupSize+1:], damageSpec[1:])
 
 
-rows = parseInput('input.txt')
+tests = [
+    ('', (), 1),
+    ('?', (), 1),
+    ('.', (), 1),
+    ('.?', (), 1),
+    ('#', (), 0),
+    ('', (1,), 0),
+    ('.', (1,), 0),
+    ('#', (1,), 1),
+    ('.#', (1,), 1),
+    ('#.', (1,), 1),
+    ('##', (2,), 1),
+    ('#', (2,), 0),
+    ('#.', (2,), 0),
+    ('###', (2, 1), 0),
+    ('#.#', (1, 1), 1),
+    ('##.#', (2, 1), 1),
+    ('?', (1,), 1),
+    ('.?', (1,), 1),
+    ('?.', (1,), 1),
+    ('??', (2,), 1),
+    ('??', (1,), 2),
+    ('???', (3,), 1),
+    ('???', (2,), 2),
+    ('???', (1, 1), 1),
+    ('???.###', (1, 1, 3), 1),
+    ('.??..??...?##.', (1, 1, 3), 4),
+    ('?#?#?#?#?#?#?#?', (1, 3, 1, 6), 1),
+    ('????.#...#...', (4, 1, 1), 1),
+    ('????.######..#####.', (1, 6, 5), 4),
+    ('?###????????', (3, 2, 1), 10),
+]
 
-numPossibleArrangements = 0
-for springs, damageSpec in rows:
-    numPossibleArrangements += countPossibleArrangements(springs, damageSpec)
+for springs, damageSpec, expect in tests:
+    actual = countPossibleArrangements(springs, damageSpec)
+    if actual != expect:
+        print('test', springs, '-', damageSpec, 'returned ', actual, ': ', expect, 'expected')
 
-print(numPossibleArrangements)
